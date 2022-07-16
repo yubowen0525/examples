@@ -1,12 +1,13 @@
 - [1. 概述](#1-概述)
 - [2. 业务层](#2-业务层)
   - [2.1. 业务层interface的入参与出参的思考](#21-业务层interface的入参与出参的思考)
-- [3. 业务层 <-> 传输层](#3-业务层---传输层)
+- [3. 业务层 <-> Endpoint](#3-业务层---endpoint)
+- [Endponit <-> 传输层](#endponit---传输层)
 - [4. 传输层 <-> 路由层](#4-传输层---路由层)
 
 
 # 1. 概述
-路由层 -> 传输层 -> 业务层
+路由层 -> 传输层 -> EndPoint -> 业务层
 
 # 2. 业务层
 业务层的上层，设计业务interface
@@ -40,8 +41,15 @@ func (stringService) Count(s string) int {
    2. 此处建议携带堆栈信息github errors。
 
 
-# 3. 业务层 <-> 传输层
+# 3. 业务层 <-> Endpoint
 此处需要一个adapter，将业务层的接口适配到传输层
+
+**需要注意Endpoint层的入参与出参**:
+1. 入参: 基本就是http.request的处理，参数400 error 判断，送入svc层
+2. 出参: 基本就是将svc层的struct 转入至 http.response
+
+
+
 ```
 // Adapter将 svc 业务层接口转化为endpoints层接口
 func makeUppercaseEndpoint(svc StringService) endpoint.Endpoint {
@@ -63,6 +71,8 @@ func makeCountEndpoint(svc StringService) endpoint.Endpoint {
 	}
 }
 ```
+
+# Endponit <-> 传输层
 
 传输层的数据转换：
 1. RPC Thrift
