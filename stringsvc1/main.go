@@ -53,6 +53,7 @@ type countResponse struct {
 	V int `json:"v"`
 }
 
+// Adapter将 svc 业务层接口转化为endpoints层接口
 // Endpoints are a primary abstraction in go-kit. An endpoint represents a single RPC (method in our service interface)
 func makeUppercaseEndpoint(svc StringService) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
